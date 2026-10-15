@@ -160,4 +160,5 @@ def loaded_cost(check_costs: pd.DataFrame, primitive_costs: pd.DataFrame,
         rows.append({"name": r.name, "segment_id": r.segment_id, "check_seconds": r.seconds_uncached,
                      "check_seconds_this_run": r.seconds, "check_usd": r.total_usd,
                      "loaded_seconds": sec, "loaded_usd": usd})
-    return pd.DataFrame(rows)
+    return pd.DataFrame(rows, columns=["name", "segment_id", "check_seconds", "check_seconds_this_run",
+                                       "check_usd", "loaded_seconds", "loaded_usd"])

@@ -28,6 +28,8 @@ def check_sentence(result: CheckResult) -> str:
     spec, c = result.spec, check_counts(result)
     total = int(sum(c.values()))
     units = PLURAL.get(spec.unit, spec.unit + "s")
+    if total == 0:
+        return f"Row {spec.rows} ({spec.title}): no {units} of this kind in the data, so nothing to check."
     parts = [f"Row {spec.rows} ({spec.title}): {c['pass']} of {total} {units} passed."]
     for s in ("candidate", "unassessable", "report", "no_coverage"):
         if c[s]:
