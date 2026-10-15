@@ -59,6 +59,22 @@ OPPOSITE_VERBS = {
 HOUSE_VERB_MAP = {"grab": "pick up", "take": "pick up", "set": "place", "lay": "place",
                   "go": "walk", "head": "walk", "proceed": "walk", "stroll": "walk"}
 
+# Verb groups for consistency within a recording (row 82). A stand-in for the groups a reviewer
+# approves once. Jev proposes new pairs and they are reported for approval, never used directly.
+# Put and place are split by the place word: "place" onto something, "put" or "insert" into something.
+INTO_PREPS = {"in", "into", "inside"}
+ONTO_PREPS = {"on", "onto", "on top of"}
+VERB_GROUPS = {
+    "pick up": {"pick up", "grab", "take", "collect"},
+    "put onto": {"place", "put", "set", "lay"},
+    "put into": {"put", "insert", "place"},
+    "wash": {"wash", "clean", "scrub"},
+    "turn on": {"turn on", "switch on"},
+    "turn off": {"turn off", "switch off"},
+    "open": {"open", "pull open"},
+    "walk": {"walk", "go", "head", "proceed", "stroll"},
+}
+
 # Words and phrases ------------------------------------------------------------
 
 INTENT_PHRASES = ("attempt to", "attempts to", "try to", "tries to", "trying to", "want to",

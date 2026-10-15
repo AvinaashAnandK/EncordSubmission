@@ -31,6 +31,7 @@ import base64
 import hashlib
 import json
 import os
+import threading
 import time
 from dataclasses import dataclass
 from pathlib import Path
@@ -110,10 +111,16 @@ class DiskCache:
 
     def get(self, key: str) -> Optional[Any]:
         p = self.root / f"{key}.json"
-        return json.loads(p.read_text()) if p.exists() else None
+        try:
+            return json.loads(p.read_text()) if p.exists() else None
+        except (OSError, ValueError):          # a partial file from an interrupted write is a miss
+            return None
 
     def put(self, key: str, value: Any) -> None:
-        (self.root / f"{key}.json").write_text(json.dumps(value))
+        """Write to a temporary file, then rename, so a reader in another thread never sees half a file."""
+        tmp = self.root / f"{key}.{os.getpid()}.{threading.get_ident()}.tmp"
+        tmp.write_text(json.dumps(value))
+        os.replace(tmp, self.root / f"{key}.json")
 
 
 def _image_ids(images: Sequence[ImageLike]) -> List[str]:

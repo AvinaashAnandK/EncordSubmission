@@ -6,6 +6,7 @@ pillow>=10.0
 matplotlib>=3.8
 spacy>=3.7
 rapidfuzz>=3.0
+symspellpy>=6.7
 requests>=2.31
 openai>=2.0
 huggingface_hub>=0.25
