@@ -81,7 +81,7 @@ def _pairs(frames: pd.DataFrame) -> List[Tuple[str, dict, dict]]:
     return pairs
 
 
-def compute_motion(frames: pd.DataFrame, ego: pd.DataFrame, raft: RaftFlow, batch: int = 16) -> pd.DataFrame:
+def compute_motion(frames: pd.DataFrame, ego: pd.DataFrame, raft: RaftFlow, batch: int = 16, log=None) -> pd.DataFrame:
     """One row per frame pair of one recording."""
     boxes: Dict[Tuple[int, str], tuple] = {
         (int(r.frame_idx), r.side): (r.x1, r.y1, r.x2, r.y2) for r in ego.itertuples()}
@@ -89,6 +89,8 @@ def compute_motion(frames: pd.DataFrame, ego: pd.DataFrame, raft: RaftFlow, batc
     rows = []
     w, h = raft.size
     for i in range(0, len(pairs), batch):
+        if log and i and (i // batch) % 25 == 0:
+            log(f"    {i}/{len(pairs)} frame pairs")
         chunk = pairs[i:i + batch]
         flows = raft.flow([a["path"] for _, a, _ in chunk], [b["path"] for _, _, b in chunk])
         for (track, a, b), fl in zip(chunk, flows):

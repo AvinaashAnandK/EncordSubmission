@@ -41,7 +41,7 @@ def ensure_hand_detector(cfg) -> Path:
 
 
 def detect_hands(frames: pd.DataFrame, weights: Path, device: str, conf: float,
-                 bottom_edge: float = 0.97, batch: int = 32) -> pd.DataFrame:
+                 bottom_edge: float = 0.97, batch: int = 32, log=None) -> pd.DataFrame:
     """Every hand box on every sampled frame. Coordinates are fractions of the frame."""
     from ultralytics import YOLO
 
@@ -53,6 +53,8 @@ def detect_hands(frames: pd.DataFrame, weights: Path, device: str, conf: float,
     rows = []
     recs = frames.to_dict("records")
     for i in range(0, len(recs), batch):
+        if log and i and (i // batch) % 20 == 0:
+            log(f"    {i}/{len(recs)} frames")
         chunk = recs[i:i + batch]
         results = model.predict([r["path"] for r in chunk], device=device, conf=conf, verbose=False)
         for r, res in zip(chunk, results):

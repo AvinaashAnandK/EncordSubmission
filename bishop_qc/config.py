@@ -51,7 +51,11 @@ class Config:
 
     # Objects (SAM 3)
     sam3_checkpoint: str = "facebook/sam3"
+    # SAM 3 is the slowest primitive. On a T4, sam3_fps = 2 and sam3_image_size = 560 cut its time
+    # several times over (fewer frames, about a third of the pixels), at some cost in accuracy:
+    # the model is trained at 1008 px.
     sam3_fps: float = 5.0
+    sam3_image_size: Optional[int] = None   # None keeps the native 1008 px
     sam3_max_prompts: int = 6
     sam3_extra_prompts: Tuple[str, ...] = ("hand", "person")
 

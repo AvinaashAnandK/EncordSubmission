@@ -120,6 +120,26 @@ def run_primitives(cfg, recordings: pd.DataFrame, segments: pd.DataFrame, client
     seg_ids = {rid: list(g.segment_id) for rid, g in seg.groupby("recording_id")}
     pts: Dict[str, np.ndarray] = {}
 
+    pdir = tdir / "parts"
+    pdir.mkdir(parents=True, exist_ok=True)
+
+    def per_recording(name: str, fname: str, build_one: Callable[[str], pd.DataFrame]) -> pd.DataFrame:
+        """Build one recording at a time and save each part, so an interrupted run keeps its progress."""
+        parts = []
+        for rid in rec.recording_id:
+            part = pdir / f"{fname}_{rid}.csv"
+            if part.exists() and not force:
+                log(f"  {rid}: loaded from cache")
+                prev = prev_events[(prev_events.name == name)] if len(prev_events) else prev_events
+                if len(prev) and "recording_id" in prev:
+                    ledger.extend(prev[prev.recording_id == rid])
+                parts.append(pd.read_csv(part))
+                continue
+            df = build_one(rid)
+            df.to_csv(part, index=False)
+            parts.append(df)
+        return pd.concat(parts, ignore_index=True) if parts else pd.DataFrame()
+
     def cached(name: str, path: Path, build: Callable[[], pd.DataFrame]) -> Tuple[pd.DataFrame, bool]:
         if path.exists() and not force:
             log(f"  loaded {path.name} from cache")
@@ -202,17 +222,16 @@ def run_primitives(cfg, recordings: pd.DataFrame, segments: pd.DataFrame, client
         log("P3 hand boxes (WiLoR hand detector) ...")
         weights = ensure_hand_detector(cfg)
 
-        def build_dets():
-            parts = []
-            for rid in rec.recording_id:
-                t0 = time.perf_counter()
-                fr = out.frames[out.frames.recording_id == rid]
-                parts.append(detect_hands(fr, weights, device, cfg.hand_conf))
-                ledger.apportion("P3", rid, time.perf_counter() - t0,
-                                 _frame_weights(fr, rid, seg_ids[rid]), device)
-            return pd.concat(parts, ignore_index=True)
+        def dets_one(rid):
+            t0 = time.perf_counter()
+            fr = out.frames[out.frames.recording_id == rid]
+            log(f"  {rid}: {len(fr)} frames")
+            d = detect_hands(fr, weights, device, cfg.hand_conf, log=log)
+            ledger.apportion("P3", rid, time.perf_counter() - t0, _frame_weights(fr, rid, seg_ids[rid]), device)
+            return d
 
-        out.hand_dets, _ = cached("P3", tdir / "hand_detections.csv", build_dets)
+        out.hand_dets, _ = cached("P3", tdir / "hand_detections.csv",
+                                  lambda: per_recording("P3", "hand_detections", dets_one))
 
     from .hands import ego_hands
 
@@ -224,18 +243,23 @@ def run_primitives(cfg, recordings: pd.DataFrame, segments: pd.DataFrame, client
 
         log("P6 object tracks (SAM 3) ...")
 
+        sam_box = {}
+
+        def objects_one(rid):
+            if "sam" not in sam_box:
+                log("  loading SAM 3 (the first run downloads several GB)")
+                sam_box["sam"] = Sam3(cfg.sam3_checkpoint, device, cfg.sam3_image_size)
+            o, v = run_objects(sam_box["sam"], out.frames[out.frames.recording_id == rid],
+                               seg[seg.recording_id == rid], parsed, ego[ego.recording_id == rid], cfg, log=log)
+            v.to_csv(pdir / f"hand_object_overlap_{rid}.csv", index=False)
+            log(f"  {rid}: {len(o)} object rows")
+            return o
+
         def build_objects():
-            sam = Sam3(cfg.sam3_checkpoint, device)
-            objs, ovs = [], []
-            for r in rec.itertuples():
-                o, v = run_objects(sam, out.frames[out.frames.recording_id == r.recording_id],
-                                   seg[seg.recording_id == r.recording_id], parsed,
-                                   ego[ego.recording_id == r.recording_id], cfg)
-                objs.append(o)
-                ovs.append(v)
-                log(f"  {r.recording_id}: {len(o)} object rows")
+            objs = per_recording("P6", "objects", objects_one)
+            ovs = [pd.read_csv(p) for p in sorted(pdir.glob("hand_object_overlap_*.csv"))]
             pd.concat(ovs, ignore_index=True).to_csv(tdir / "hand_object_overlap.csv", index=False)
-            return pd.concat(objs, ignore_index=True)
+            return objs
 
         out.objects, _ = cached("P6", tdir / "objects.csv", build_objects)
         ov_path = tdir / "hand_object_overlap.csv"
@@ -261,19 +285,19 @@ def run_primitives(cfg, recordings: pd.DataFrame, segments: pd.DataFrame, client
 
         log("P4 motion timeline (RAFT) ...")
 
-        def build_motion():
-            raft = RaftFlow(device, cfg.raft_size)
-            parts = []
-            for rid in rec.recording_id:
-                t0 = time.perf_counter()
-                fr = out.frames[out.frames.recording_id == rid]
-                parts.append(compute_motion(fr, ego[ego.recording_id == rid], raft))
-                ledger.apportion("P4", rid, time.perf_counter() - t0, _frame_weights(fr, rid, seg_ids[rid]),
-                                 device)
-                log(f"  {rid}: {len(parts[-1])} frame pairs")
-            return pd.concat(parts, ignore_index=True)
+        raft_box = {}
 
-        raw, _ = cached("P4", tdir / "motion.csv", build_motion)
+        def motion_one(rid):
+            if "raft" not in raft_box:
+                raft_box["raft"] = RaftFlow(device, cfg.raft_size)
+            t0 = time.perf_counter()
+            fr = out.frames[out.frames.recording_id == rid]
+            m = compute_motion(fr, ego[ego.recording_id == rid], raft_box["raft"], log=log)
+            ledger.apportion("P4", rid, time.perf_counter() - t0, _frame_weights(fr, rid, seg_ids[rid]), device)
+            log(f"  {rid}: {len(m)} frame pairs")
+            return m
+
+        raw, _ = cached("P4", tdir / "motion.csv", lambda: per_recording("P4", "motion", motion_one))
         sig, ons = [], []
         for rid, grp in raw.groupby("recording_id"):
             m, thr = motion_signals(grp, cfg.onset_mad_k)

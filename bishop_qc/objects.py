@@ -48,15 +48,23 @@ def segment_prompts(nouns_by_seg: Dict[str, List[str]], seg_ids: Sequence[str], 
 
 
 class Sam3:
-    def __init__(self, checkpoint: str, device: str):
+    def __init__(self, checkpoint: str, device: str, image_size=None):
         import torch
-        from transformers import Sam3VideoModel, Sam3VideoProcessor
+        from transformers import Sam3VideoConfig, Sam3VideoModel, Sam3VideoProcessor
 
         self.torch = torch
         self.device = device
         self.dtype = torch.bfloat16 if device == "cuda" else torch.float32
-        self.model = Sam3VideoModel.from_pretrained(checkpoint).to(device, dtype=self.dtype).eval()
-        self.processor = Sam3VideoProcessor.from_pretrained(checkpoint)
+        if image_size:
+            config = Sam3VideoConfig.from_pretrained(checkpoint)
+            config.image_size = int(image_size)
+            self.model = Sam3VideoModel.from_pretrained(checkpoint, config=config)
+            self.processor = Sam3VideoProcessor.from_pretrained(
+                checkpoint, size={"height": int(image_size), "width": int(image_size)})
+        else:
+            self.model = Sam3VideoModel.from_pretrained(checkpoint)
+            self.processor = Sam3VideoProcessor.from_pretrained(checkpoint)
+        self.model = self.model.to(device, dtype=self.dtype).eval()
 
     def track(self, images, prompts: List[str]):
         """Yield (local frame index, postprocessed outputs) for one clip."""
@@ -105,7 +113,7 @@ def _hand_masks(boxes, hand_objs, masks, h, w, min_iou: float = 0.3):
 
 
 def run_objects(sam: Sam3, frames: pd.DataFrame, seg: pd.DataFrame, parsed: Dict[str, ParsedCaption],
-                ego: pd.DataFrame, cfg) -> Tuple[pd.DataFrame, pd.DataFrame]:
+                ego: pd.DataFrame, cfg, log=print) -> Tuple[pd.DataFrame, pd.DataFrame]:
     """SAM 3 on every segment of one recording. Returns (object rows, hand overlap rows)."""
     seg = seg.sort_values("segment_index")
     ids = list(seg.segment_id)
@@ -116,7 +124,10 @@ def run_objects(sam: Sam3, frames: pd.DataFrame, seg: pd.DataFrame, parsed: Dict
     for r in ego.itertuples():
         boxes.setdefault(int(r.frame_idx), []).append((r.side, (r.x1, r.y1, r.x2, r.y2)))
     extra = tuple(cfg.sam3_extra_prompts) + ((HAND_PROMPT,) if HAND_PROMPT not in cfg.sam3_extra_prompts else ())
+    import time
+
     obj_rows, ov_rows = [], []
+    t_start, n = time.perf_counter(), len(seg)
     for i, row in enumerate(seg.itertuples()):
         clip = tl[tl.segment_id == row.segment_id].iloc[::step]
         if clip.empty:
@@ -124,6 +135,11 @@ def run_objects(sam: Sam3, frames: pd.DataFrame, seg: pd.DataFrame, parsed: Dict
         prompts = segment_prompts(nouns, ids, i, cfg.sam3_max_prompts, extra)
         with LEDGER.scope("P6", row.recording_id, row.segment_id, sam.device):
             _track_segment(sam, clip, row, prompts, boxes, cfg, obj_rows, ov_rows)
+        done = i + 1
+        if done % 10 == 0 or done == n:
+            per = (time.perf_counter() - t_start) / done
+            log(f"    {row.recording_id}: {done}/{n} segments, {per:.1f} s per segment, "
+                f"about {per * (n - done) / 60:.1f} min left")
     obj_cols = ["recording_id", "segment_id", "frame_idx", "t", "prompt", "obj_id", "score",
                 "x1", "y1", "x2", "y2", "mask_area"]
     ov_cols = ["recording_id", "frame_idx", "side", "prompt", "obj_id", "overlap", "mask_source"]
