@@ -1,0 +1,81 @@
+key,unit,source,reviewed_status,verdict,note
+row02_03,sample3_026,samples,candidate,Correct flag,"The hands are still handling the metal bowl from 102.0 s to 102.6 s, after the cut at 102.10 s. The sponge does not go into the container in this window. The cut is early."
+row04,sample3_026,samples,unassessable,Pending GPU,"Needs the motion timeline (P4). The local run has no GPU, so the check reports unassessable, never pass."
+row05,sample3_090,samples,candidate,Correct flag,"Deterministic. The last segment ends at 343.0 s and the video ends at 343.6 s, so 0.6 s has no segment. The guideline requires every frame to belong to a segment."
+row06,sample1_001,samples,unassessable,Pending GPU,Needs the hand timeline (P3) to find the start of the reach. Runs on the GPU.
+row07,sample1_002,samples,pass,Correct pass,Deterministic on the captions. The segments on both sides of this one describe different actions.
+row08,sample2_005,samples,candidate,Correct flag,"The caption joins a pick up and a put with ""then"", and the frames show both. The guideline lists ""pick up an object then put it down"" as two segments. 10 segments in sample 2 have this pattern."
+row09,sample2_015,samples,candidate,"Plausible, needs the clip","The same small bag stays in the left hand across the cut at 47.30 s. That suggests one continuing action, but six frames cannot show where one cycle ends. A reviewer plays the 2 s around the cut."
+row10,sample1,samples,no_coverage,Not covered,"A folded micromovement leaves no caption to read, so only a gold set of segments can show it. Reported as no coverage, never as a pass."
+row11,sample1_003,samples,pass,Correct pass,One clean pick up of a breaded piece from the plate. No failed attempt before it.
+row12,sample2_027,samples,pass,Correct pass,"The failed join ends and the drop starts at the cut at 92.4 s. Two separate actions, correctly split."
+row13,sample3_056,samples,unassessable,Pending GPU,"A possible exemption (different hands on both sides of the cut). Needs the hand and motion timelines (P3, P4) to compare spans."
+row14,sample2_014,samples,candidate,False alarm,"The frames show one pick up and put of a small bag, which is the row 8 merge. Two full cycles are not visible. Row 14 repeats row 8 on these captions, so the two flags need to merge into one finding."
+row15,sample2_011,samples,candidate,False alarm,"The next segment picks up a different bag (the one with the yellow handle). The check compares only the head noun (""small bag"") and misses the attribute. Fix: compare the full noun phrase."
+row16,sample3_010,samples,report,Correct report,"The fork is picked up with the left hand and washed with the right, with no transfer visible at the cut. From 41.3 s both hands are at the fork, so ""with both hands"" may be right. A human decides."
+row17,sample1_001,samples,pass,Correct pass,Jev reads the caption as a completed pick up (p failed reach = 0.07). The frames agree.
+row18,sample2_022,samples,candidate,Correct flag,The bag is already on the table at 75.5 s. The hands then leave the view until about 77.0 s. That is a pause of about 1 s or more inside the segment: a missed IDLE.
+row19,sample1_014,samples,pass,Correct pass,"Deterministic. The IDLE lasts 6.9 s, over the 1 s minimum."
+row20,sample2_025,samples,pass,Correct pass,"The hand action is captioned. The seated posture cannot be confirmed from a top-down view, but that does not change the verdict."
+row21,,none,none,No sample case,No SITTING segment in the samples. The check looks for sitting down or standing up inside SITTING segments with the motion timeline.
+row22,sample2_025,samples,pass,Correct pass,No kneeling or squatting. Same posture caveat as row 20.
+row23,sample1_014,samples,pass,Correct pass,During the IDLE the camera looks at the stove and the hands are mostly out of view. No unrelated action.
+row24,sample3_052,samples,candidate,Correct flag,"Marked IDLE, but from 215.2 s to 215.9 s the hands shake water off at the sink, then the view turns to the counter. The hands act, so IDLE is wrong."
+row25,,none,none,No sample case,No TASK UNRELATED ACTION segment in the samples.
+row26,sample1_014,samples,unassessable,Pending GPU,Needs the motion timeline (P4) to tell looking around from turning.
+row27,sample1_016,samples,candidate,"Plausible, needs the clip","From 35.2 s to 35.9 s the hands are out of view, but the caption says the cabinet below the sink is being opened, which is also out of view. Frames cannot tell a pause from off-frame work. Locally the flag rests on duration only. P3 and P4 decide on the GPU."
+row28,sample3_023,samples,candidate,"Plausible, needs the clip","The bowl stays in the sink in all six frames and the right hand starts to scrub. ""Pick up"" is not visible. This is closer to a wrong action (row 33) than to intent wording."
+row29,sample2_026,samples,pass,Correct pass,"The caption already records the failed join (""but fail to join them"")."
+row30,sample2_026,samples,pass,Correct pass,"""Attempt to"" with its outcome stated (Jev p = 0.97)."
+row31,sample3_024,samples,candidate,False alarm,"The sponge is a small dark green scrub pad, and from 93.4 s it is in the hands, half hidden. The model missed it. A miss does not prove it is out of view, as the message says. SAM 3 (P6) on the GPU should reduce this."
+row32,sample2_018,samples,candidate,"Plausible, needs the clip","At 63.0 s the mount is near the bag opening, but it is not clearly inside. Six frames are not enough. The segment is also a row 8 merge."
+row33,sample3_022,samples,candidate,Correct flag,"The right hand scrubs the plate with the sponge, then lifts the plate. The sponge never goes into the container in this segment. The caption describes the wrong action."
+row34,sample1_016,samples,pass,"Correct pass, weak evidence","The pass is right, but the model's top answer is ""different object"": the sharpest frame shows the plates, not the cabinet. The check must pick a frame where the object is visible (SAM 3 on the GPU)."
+row35,sample2_004,samples,candidate,Correct flag,"Deterministic. ""Then put the black plastic part in the large clear bag"" names no hand. The guideline names the hand for every hand action."
+row36,sample2_008,samples,pass,Correct pass,"""Until it is closed"" states the end point."
+row37,sample1_014,samples,pass,Correct pass,"No undescribed change in what the hands hold. The message shows the top answer (""picked up"") even though it is below the flag line. The wording needs to change."
+row38,sample2_018,samples,candidate,Correct flag,The second clause names no hand. This duplicates row 35 on the same clause: merge them into one finding.
+row39,sample3_069,samples,candidate,Correct flag,"The hand at the tap wears the watch, the camera wearer's left hand in every segment. The right hand holds the cucumber. The caption swaps the hands."
+row40,sample3_067,samples,candidate,False alarm,"Both arms are the camera wearer's. The watch is on the left wrist as in other segments, and the right arm comes in from the side because she leans over the counter. The detector's owner rule (P3) on the GPU should remove this."
+row41,sample3_069,samples,candidate,"Right segment, wrong reason","The left hand does not hold the cucumber, but it is not idle: it turns off the tap. The real error is the hand swap in row 39. Row 41 must defer to row 39 when both fire."
+row42,sample2_018,samples,candidate,Correct flag,From 60.2 s to 63.0 s the left hand holds the black pole and steadies the bag. The caption names only the right hand.
+row43,sample3_010,samples,report,Correct report,The same signal as row 16 on the same boundary. A human decides between a missing transfer and a wrong hand. Merge the two findings.
+row44,sample3_010,samples,pass,Correct pass,No transfer happens out of view at this cut.
+row45,,none,none,No sample case,No navigation while carrying an object in the samples.
+row46,sample2_003,samples,pass,Correct pass,"The left hand holds the large bag open while the right hand puts the small bag in. The held object bears on the action, so naming it is right."
+row47,sample1_016,samples,pass,Correct pass,"The caption names hands. The cabinet is out of view, so the frames cannot show a hip or a foot either."
+row48,,none,none,No sample case,No caption names a body part other than a hand.
+row49,,none,none,No sample case,No caption describes a grip or an arm path.
+row50,sample1_018,samples,pass,Correct pass,"""Move a breaded piece in the black pan"" moves an object, not the person, and Jev confirms this. The navigation test set shows the flags."
+row51,sample1_018,samples,pass,Correct pass,Same as row 50: no clause where the person moves.
+row52,sample1_018,samples,pass,Correct pass,Same as row 50.
+row53,sample1_018,samples,pass,Correct pass,Same as row 50.
+row54,sample1_018,samples,pass,Correct pass,Same as row 50.
+row55,sample3_031,samples,pass,Correct pass,"""Turn on the tap"" is not a turn of the body. The parser keeps ""turn on"" as an object verb."
+row56,sample3_031,samples,pass,Correct pass,Same as row 55.
+row57,sample1_018,samples,pass,Correct pass,Same as row 50.
+row58,sample3_027,samples,candidate,False alarm,"A rimmed steel plate of the kind that also serves as a pot lid. Nothing in the clip uses it as a lid, so ""plate"" stands. Lid and plate stay on the confusable list, because the reviewer resolves this in seconds."
+row59,sample1_001,samples,candidate,Correct flag,"""Piece"" is vague, and the object is clearly a breaded cutlet. Sol's suggestion ""breaded chicken fillet"" over-claims: chicken cannot be seen. Suggestions are proposals, never fixes."
+row60,sample2_025,samples,candidate,Correct flag,"The pile holds many white parts of different shapes, and ""a white plastic part"" does not say which. A shape word would single each one out. Related client question: do interchangeable identical items need this?"
+row61,sample2_025,samples,pass,Correct pass,"""Another"" refers to the part named earlier in the same caption (Jev p = 0.12)."
+row63,sample1_001,samples,pass,Correct pass,No brand or label name (Jev p = 0.08).
+row64,sample2_001,samples,pass,Correct pass,The bag is clear and the black parts inside are visible.
+row65,sample3_030,samples,candidate,False alarm,"The green container is a round dishwashing-bar tub. ""Container"" with ""green"" is a fair fallback, and the suggestion ""plastic bowl"" is wrong. The frames also show that the sponge does not go into the container here."
+row66,Fold the fabric on the bed with both hands,test,candidate,Correct flag,"Test caption, no video. ""Fabric"" stands in for the approved fallback noun ""garment"". No sample caption uses a synonym."
+row67,sample3_005,samples,pass,Correct pass,"""Green"" is the attribute on the fallback noun."
+row68,sample1_009,samples,candidate,Correct flag (planted),The planted backward edit is found. On this segment's own footage the caption holds: this is the last piece on the plate. The reviewer would keep it.
+row69,sample2_025,samples,report,Correct report,3D-printed parts of a gadget. No specific name and no fallback noun fits. A guideline gap for the client.
+row70,sample1_009,samples,pass,Correct pass,"""Last"" and ""breaded"" are within one attribute of the minimum."
+row71,sample3,samples,report,Correct report,"""Tap"" in 22 captions. Reported only: no dialect is set."
+row72,sample1_001,samples,pass,Correct pass,Starts with a base-form verb.
+row73,sample1_001,samples,pass,Correct pass,One sentence.
+row74,sample2_003,samples,report,Correct report,"26 words with a ""while"" clause. Reported for row 8, not scored."
+row75,sample1_001,samples,pass,Correct pass,Capital letter at the start and no final period.
+row76,sample1_001,samples,pass,Correct pass,No spelling or grammar error.
+row77,sample3,samples,pass,Correct pass,No marked spelling in either standard.
+row78,sample1_001,samples,pass,Correct pass,No comma.
+row79,sample2_026,samples,pass,Correct pass,"""Attempt to push ... but fail to join them"": both clauses are imperatives joined by ""but""."
+row80,sample1_001,samples,pass,Correct pass,No fixed caption mixed with other text.
+row81,sample1_014,samples,pass,Correct pass,"Exact fixed caption ""IDLE""."
+row82,sample3,samples,pass,Correct pass,"Two annotators (ann_05, ann_06) use the same verbs. ""Put"" into the container and ""Place"" onto the plate follow the house rule."
+row83,sample3_005,samples,pass,Correct pass,"""Put"" into a container follows the house preference."

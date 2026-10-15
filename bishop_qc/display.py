@@ -316,3 +316,55 @@ def check_report(result, show_flagged: bool = True):
         if len(reasons):
             display(Markdown("Not assessed, by reason:"))
             display(reasons)
+
+
+def check_example(result, prims, ex: pd.Series):
+    """One reviewed example under a check: this run's output for the unit, its frames, and the review note.
+
+    ex is a row of evaluation/check_examples.csv. The note was written for one run. When this run gives
+    a different status for the unit, the view says so, because the note may no longer hold.
+    """
+    from IPython.display import Markdown, display
+
+    key = result.spec.key
+    if ex.source == "none":
+        display(Markdown(f"> **Reviewed example ({key}):** no unit of this kind in the samples. {ex.note}"))
+        return
+    seg = prims.segments
+    f = result.findings
+    if ex.source == "test":
+        hit = seg[seg.caption == ex.unit]
+        sid = hit.segment_id.iloc[0] if len(hit) else ""
+        rows = f[f.segment_id == sid]
+    elif result.spec.unit == "recording":
+        sid, rows = "", f[f.recording_id == ex.unit]
+    else:
+        sid, rows = ex.unit, f[f.segment_id == ex.unit]
+    status = rows.status.iloc[0] if len(rows) else "not in this run"
+    message = rows.message.iloc[0] if len(rows) else ""
+    lines = [f"**Reviewed example ({key}): `{ex.unit if ex.source != 'test' else 'test caption'}`**", "",
+             "| | |", "|---|---|", f"| Status in this run | {html.escape(str(status))} |",
+             f"| Output | {html.escape(str(message))} |"]
+    s = None
+    if sid and sid in set(seg.segment_id):
+        s = seg.set_index("segment_id").loc[sid]
+        if result.spec.unit == "boundary" and len(rows):
+            ev = json.loads(rows.evidence.iloc[0]) if isinstance(rows.evidence.iloc[0], str) else {}
+            prev = ev.get("prev_id")
+            if prev:
+                lines.append(f'| Before the cut | "{html.escape(str(seg.set_index("segment_id").loc[prev].caption))}" |')
+            lines.append(f'| After the cut | "{html.escape(str(s.caption))}" (cut at {s.start_s:.2f} s) |')
+        else:
+            lines.append(f'| Caption | "{html.escape(str(s.caption))}" ({s.start_s:.2f} to {s.end_s:.2f} s) |')
+    display(Markdown("\n".join(lines)))
+    if s is not None and ex.source != "test" and len(prims.frames):
+        if result.spec.unit == "boundary":
+            boundary_strip(prims, s.recording_id, float(s.start_s), span=0.5, n=6,
+                           title="Frames 0.5 s either side of the cut (blue: after the cut)")
+        else:
+            clip_strip(prims, s.recording_id, float(s.start_s), float(s.end_s), n=6, title="Frames across the segment")
+    note = f"> **Review: {ex.verdict}.** {ex.note}"
+    if status != ex.reviewed_status:
+        note += (f"\n>\n> The review was written for a run that gave **{ex.reviewed_status}**. This run gives "
+                 f"**{status}**, so review this example again.")
+    display(Markdown(note))
