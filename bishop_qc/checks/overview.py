@@ -65,3 +65,27 @@ def category_overview(ov: pd.DataFrame) -> pd.DataFrame:
     })
     out.loc["All checks"] = out.sum(numeric_only=True)
     return out
+
+
+def headline(ov: pd.DataFrame, n_segments: int, flagged_segments: int, video_hours: float, primitives_usd_per_hour: float,
+             gpu_ran: bool) -> str:
+    """The opening lines of section 9, in plain sentences."""
+    r = ov.role.value_counts()
+    cands = int(ov.flagged.sum())
+    checks_usd = float(ov["usd per video hour"].sum())
+    lines = [
+        f"This run checked {n_segments} segments, {video_hours * 60:.1f} minutes of video, with {len(ov)} checks.",
+        f"{r.get('rule', 0)} checks are rules. {r.get('model', 0)} checks raise candidates for a reviewer. "
+        f"{r.get('report', 0)} checks report a number without a score. {r.get('gap', 0)} check looks for an error "
+        "that the inputs cannot show.",
+        f"The checks flagged {cands} units, about {cands / video_hours:.0f} per hour of video. {flagged_segments} of "
+        f"{n_segments} segments have at least one flag.",
+    ]
+    if gpu_ran:
+        lines.append(f"The GPU primitives ran. Per hour of video, the primitives cost ${primitives_usd_per_hour:.2f} and "
+                     f"the checks cost ${checks_usd:.2f}. The total is ${primitives_usd_per_hour + checks_usd:.2f}.")
+    else:
+        lines.append(f"The GPU primitives did not run, because this run had no GPU. Per hour of video, the primitives "
+                     f"that ran cost ${primitives_usd_per_hour:.2f} and the checks cost ${checks_usd:.2f}. The GPU time "
+                     "is missing from these totals.")
+    return "\n\n".join(lines)
