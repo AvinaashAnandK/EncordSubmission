@@ -1,0 +1,15 @@
+check,segment_id,prev_id,sol_prob,luna_prob,label,favours,note
+row11,sample2_015,,0.76,0.04,no failed attempt,luna,Continuous handling of the bags. A bag is picked and put in the clear bag with no miss and no restart.
+row11,sample2_026,,0.72,0.22,unclear,unclear,Repeated pushes that all fail. A retry is visible but nothing succeeds. Whether each failed push needs its own segment is a guideline question.
+row12,sample2_027,sample2_026,0.92,0.12,not continuous,luna,The cut separates the failed push from a different action (the drop). The camera then turns to the bags. The split is right.
+row14,sample2_005,,0.91,0.29,two or more cycles,sol,The right hand puts one item in the clear bag (11.6 to 12.6 s) and picks a second item (13.7 s) that it also puts in.
+row14,sample2_006,,0.76,0.04,two or more cycles,sol,The right hand picks a black item (16.1 s) and puts it in (16.6 s) then reaches again (17.2 s) and puts in a second item (17.8 s).
+row14,sample2_013,,0.89,0.33,unclear,unclear,Both hands work the bags throughout. Cannot count separate cycles from 8 frames.
+row14,sample2_014,,0.25,0.89,one cycle,sol,One put into the clear bag. The left hand starts picking the next item at the end (45.7 to 47.2 s) but does not place it in this segment. That is a late cut (row 2) not a grouped cycle.
+row14,sample2_017,,0.71,0.15,one cycle,luna,The right hand picks the black pole (57.0 s) and puts it in the clear bag (57.5 to 58.1 s). The earlier frames are bag handling.
+row14,sample2_021,,0.84,0.32,zero cycles,luna,The person seals the clear bag. No object is picked and placed elsewhere.
+row14,sample2_026,,0.95,0.15,zero cycles,luna,The person tries to push two parts together. Nothing is put down in a new place.
+row14,sample2_027,,0.82,0.01,zero cycles,luna,The parts are dropped and the camera turns away. No pick and place is visible.
+row14,sample3_060,,0.96,0.06,unclear,unclear,The first half is still washing at the sink (a late cut). The tomatoes are then placed with both hands. Cannot tell whether they go down together or one by one.
+row14,sample3_079,,0.94,0.17,one cycle,luna,The tomatoes are placed on the plate with both hands once (295.2 to 296.7 s). Another person's hands are in view on the left (row 40).
+row14,sample3_082,,0.75,0.01,one cycle,luna,The chillies are rinsed and then placed on the plate once (309.0 to 309.6 s). Another person's arm is in view (row 40).

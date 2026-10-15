@@ -1,0 +1,19 @@
+#,start_s,end_s,caption
+1,0.0,1.0,Pick up a breaded piece from the white plate with your right hand
+2,1.0,2.1,Put the breaded piece in the black pan with your right hand
+3,2.1,3.9,Pick up a breaded piece from the white plate with your right hand
+4,3.9,5.4,Put the breaded piece in the black pan with your right hand
+5,5.4,6.9,Pick up a breaded piece from the white plate with your right hand
+6,6.9,8.5,Put the breaded piece in the black pan with your right hand
+7,8.5,10.5,Pick up a breaded piece from the white plate with your right hand
+8,10.5,12.1,Put the breaded piece in the black pan with your right hand
+9,12.1,13.6,Pick up the last breaded piece from the white plate with your right hand
+10,13.6,15.5,Put the breaded piece in the black pan with your right hand
+11,15.5,17.3,Pick up the fork from the white plate with your right hand
+12,17.3,22.5,Separate the breaded pieces in the black pan with the fork in your right hand
+13,22.5,23.9,Place the fork on the white plate with your right hand
+14,23.9,30.8,IDLE
+15,30.8,33.0,Pick up the green bottle from beside the sink with your right hand
+16,33.0,36.7,Open the cabinet under the sink with your left hand while lowering the green bottle out of view with your right hand
+17,36.7,38.2,Pick up the fork from the white plate with your right hand
+18,38.2,40.0,Move a breaded piece in the black pan with the fork in your right hand

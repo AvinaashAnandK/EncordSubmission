@@ -1,0 +1,91 @@
+#,start_s,end_s,caption
+1,0.0,8.5,Wash the metal pot with both hands
+2,8.5,14.3,Move the metal pot with both hands
+3,14.3,16.8,Pick up the green sponge with your right hand
+4,16.8,29.2,Wash the metal pot with both hands
+5,29.2,31.7,Put the green sponge in the green container with your right hand
+6,31.7,33.0,Pick up the red handled peeler with your right hand
+7,33.0,36.5,Wash the red handled peeler with your right hand
+8,36.5,39.1,Move the red handled peeler to the right with your right hand
+9,39.1,41.0,Pick up the fork with your left hand
+10,41.0,44.2,Wash the fork with your right hand
+11,44.2,45.3,Pick up the green sponge with your right hand
+12,45.3,47.3,Wash the fork with both hands
+13,47.3,48.8,Move the fork to the right with your right hand
+14,48.8,50.0,Put the green sponge in the green container with your right hand
+15,50.0,51.6,Pick up the metal spoon with your right hand
+16,51.6,52.8,Pick up the green sponge with your right hand
+17,52.8,58.7,Wash the metal spoon with both hands
+18,58.7,60.1,Move the metal spoon to the right with your right hand
+19,60.1,63.3,Pick up the metal plate with both hands
+20,63.3,65.1,Pick up the green sponge with your right hand
+21,65.1,89.0,Wash the metal plate with both hands
+22,89.0,90.8,Put the green sponge in the green container with your right hand
+23,90.8,92.4,Pick up the metal bowl with both hands
+24,92.4,93.7,Pick up the green sponge with your right hand
+25,93.7,102.1,Wash the metal bowl with both hands
+26,102.1,104.2,Put the green sponge in the green container with your right hand
+27,104.2,105.5,Pick up the metal plate with both hands
+28,105.5,106.7,Pick up the green sponge with your right hand
+29,106.7,120.3,Wash the metal plate with both hands
+30,120.3,122.3,Put the green sponge in the green container with your right hand
+31,122.3,124.1,Turn on the tap with your right hand
+32,124.1,138.5,Rinse the metal plate under the tap with both hands
+33,138.5,141.0,Move the metal plate to the left with both hands
+34,141.0,149.0,Rinse your hands under the tap
+35,149.0,150.4,Pick up the metal bowl with your left hand
+36,150.4,160.0,Rinse the metal bowl under the tap with both hands
+37,160.0,163.1,Move the metal bowl to the left with both hands
+38,163.1,166.5,Pick up the fork with your left hand
+39,166.5,174.4,Rinse the fork under the tap with both hands
+40,174.4,177.0,Place the fork on the metal plate with your right hand
+41,177.0,179.0,Pick up the red handled peeler with your right hand
+42,179.0,184.2,Rinse the red handled peeler under the tap with both hands
+43,184.2,186.6,Place the red handled peeler on the metal plate with your right hand
+44,186.6,188.3,Pick up the metal spoon with your right hand
+45,188.3,190.5,Rinse the metal spoon under the tap with both hands
+46,190.5,191.5,Move the metal spoon to the left with your right hand
+47,191.5,193.1,Pick up the metal pot with both hands
+48,193.1,209.2,Rinse the metal pot under the tap with both hands
+49,209.2,211.0,Move the metal pot to the left with both hands
+50,211.0,214.0,Rinse your hands under the tap
+51,214.0,215.2,Turn off the tap with your right hand
+52,215.2,216.9,IDLE
+53,216.9,217.8,Pick up the right tomato with your right hand
+54,217.8,218.9,Pick up the middle tomato with your right hand
+55,218.9,220.7,Pick up the bottom tomato with your right hand
+56,220.7,221.9,Pick up the top tomato with your left hand
+57,221.9,223.7,Move the tomatoes over the sink with both hands
+58,223.7,225.3,Turn on the tap with your right hand
+59,225.3,229.8,Wash the tomatoes under the tap with both hands
+60,229.8,233.3,Place the tomatoes on the metal plate with both hands
+61,233.3,236.8,Pick up the green chillies with both hands
+62,236.8,242.1,Wash the green chillies under the tap with both hands
+63,242.1,246.2,Place the green chillies on the metal plate with both hands
+64,246.2,249.9,Pick up the green bell pepper with your right hand
+65,249.9,256.1,Wash the green bell pepper under the tap with both hands
+66,256.1,259.4,Place the green bell pepper on the metal plate with your right hand
+67,259.4,261.0,Pick up the cucumber with your right hand
+68,261.0,272.4,Wash the cucumber under the tap with both hands
+69,272.4,274.2,Turn off the tap with your right hand while holding the cucumber in your left hand
+70,274.2,277.3,Place the cucumber on the metal plate with both hands
+71,277.3,280.4,IDLE
+72,280.4,281.3,Pick up the right tomato with your right hand
+73,281.3,282.4,Pick up the middle tomato with your right hand
+74,282.4,284.2,Pick up the bottom tomato with your right hand
+75,284.2,285.4,Pick up the top tomato with your left hand
+76,285.4,287.2,Move the tomatoes over the sink with both hands
+77,287.2,288.8,Turn on the tap with your right hand
+78,288.8,293.3,Wash the tomatoes under the tap with both hands
+79,293.3,296.8,Place the tomatoes on the metal plate with both hands
+80,296.8,300.3,Pick up the green chillies with both hands
+81,300.3,305.6,Wash the green chillies under the tap with both hands
+82,305.6,309.7,Place the green chillies on the metal plate with both hands
+83,309.7,313.4,Pick up the green bell pepper with your right hand
+84,313.4,319.6,Wash the green bell pepper under the tap with both hands
+85,319.6,322.9,Place the green bell pepper on the metal plate with your right hand
+86,322.9,324.5,Pick up the cucumber with your right hand
+87,324.5,335.9,Wash the cucumber under the tap with both hands
+88,335.9,337.7,Turn off the tap with your right hand while holding the cucumber in your left hand
+89,337.7,340.8,Place the cucumber on the metal plate with both hands
+90,340.8,343.0,IDLE
